@@ -1,0 +1,8 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="10dp"
+             android:layout_height="10dp"
+             tools:context="hu.krisztiaan.weathertaps.fragments.BlankFragment"
+    >
+
+</FrameLayout>

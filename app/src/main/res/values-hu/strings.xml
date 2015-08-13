@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_body">Váratlan hiba történt. Próbálj másképpen kapcsolódni az internetre, vagy próbáld újra később.</string>
+    <string name="error_button_ok">Rendben</string>
+    <string name="error_title">Hoppá!</string>
+    <string name="hello_blank_fragment"></string>
+    <string name="humidity">"Páratartalom: "</string>
+    <string name="noconn_body">Az alkalmazás használatához szükséges egy működő internet kapcsolat. Kérlek kapcsold be a mobil adatforgalmazást, vagy a WiFi-t.</string>
+    <string name="noconn_button_cancel">Mégse</string>
+    <string name="noconn_button_settings">Beállítások</string>
+    <string name="noconn_title">Sikertelen kapcsolódás</string>
+    <string name="play_error_body">Sajnáljuk, de az eszközöd nem felel meg a minimális követelményeknek.</string>
+    <string name="play_error_title">Eszköz nem támogatott</string>
+    <string name="pressure">"Nyomás: "</string>
+    <string name="title_activity_maps"></string>
+    <string name="wind">"Szél: "</string>
+    <string name="no_data">n.a.</string>
+</resources>

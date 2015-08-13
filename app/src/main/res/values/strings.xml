@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name" translatable="false">WeatherTaps</string>
+    <string name="title_activity_maps" translatable="false">WeatherTaps</string>
+
+    <string name="error_title">Oops!</string>
+    <string name="error_body">An unexpected error happened. Try using a different connection, or try again later.</string>
+    <string name="error_button_ok">OK</string>
+    <string name="noconn_title">Unable to connect</string>
+    <string name="noconn_body">You need a network connection to use this application. Please turn on mobile network or Wi-Fi in Settings.</string>
+    <string name="noconn_button_settings">Settings</string>
+    <string name="noconn_button_cancel">Cancel</string>
+    <string name="play_error_title">Device not supported</string>
+    <string name="play_error_body">Sorry, your device does not seem to support the minimal requirements.</string>
+    <string name="deg_celsius" translatable="false">" °C"</string>
+    <string name="wind">"Wind: "</string>
+    <string name="kmph" translatable="false">" km/h"</string>
+    <string name="humidity">"Humidity: "</string>
+    <string name="pressure">"Pressure: "</string>
+    <string name="percent" translatable="false">%</string>
+    <string name="hpa" translatable="false">" hPa"</string>
+    <string name="no_data">NaN</string>
+</resources>
