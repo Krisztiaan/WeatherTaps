@@ -1,7 +1,8 @@
-package hu.krisztiaan.weathertaps.connection;
+package hu.krisztiaan.weathertaps.connection.apis;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import hu.krisztiaan.weathertaps.connection.ConnectionManager;
 import hu.krisztiaan.weathertaps.data.Weather;
 
 public abstract class WeatherApi {

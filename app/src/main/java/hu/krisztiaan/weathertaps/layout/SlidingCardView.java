@@ -5,16 +5,13 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
 
-import com.pnikosis.materialishprogress.ProgressWheel;
-
 public class SlidingCardView extends CardView {
 
     private float yFraction = 0;
-    private ProgressWheel mProgressWheel;
+    private ViewTreeObserver.OnPreDrawListener preDrawListener = null;
 
     public SlidingCardView(Context context) {
         super(context);
-        mProgressWheel = new ProgressWheel(context);
     }
 
     public SlidingCardView(Context context, AttributeSet attrs) {
@@ -25,7 +22,9 @@ public class SlidingCardView extends CardView {
         super(context, attrs, defStyle);
     }
 
-    private ViewTreeObserver.OnPreDrawListener preDrawListener = null;
+    public float getYFraction() {
+        return this.yFraction;
+    }
 
     public void setYFraction(float fraction) {
 
@@ -48,9 +47,5 @@ public class SlidingCardView extends CardView {
 
         float translationY = getHeight() * fraction;
         setTranslationY(translationY);
-    }
-
-    public float getYFraction() {
-        return this.yFraction;
     }
 }

@@ -7,7 +7,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.net.ConnectException;
 
+import hu.krisztiaan.weathertaps.connection.apis.WeatherApi;
 import hu.krisztiaan.weathertaps.connection.apis.openweather.OpenWeatherApi;
+import hu.krisztiaan.weathertaps.connection.network.NetworkUtil;
 import hu.krisztiaan.weathertaps.data.Weather;
 
 public class ConnectionManager {
@@ -24,17 +26,16 @@ public class ConnectionManager {
     }
 
     public static void onWeatherReady(Weather weatherData) {
-        Log.i(TAG, "onWeatherReady calling back with weather data: " + weatherData.toString());
-        tempLatLng = null;
-        Retrier.stop();
-        mListener.onWeatherData(weatherData);
+        if (weatherData.latLng.equals(tempLatLng)) {
+            Log.i(TAG, "onWeatherReady calling back with weather data: " + weatherData.toString());
+            mListener.onWeatherData(weatherData);
+            tempLatLng = null;
+        }
     }
 
     public static void onRequestError(Exception e) {
-        if (/*!Retrier.retry(tempLatLng)*/true) {
             e.printStackTrace();
             mListener.onRequestError(e);
-        }
     }
 
     public static void requestWeatherData(LatLng latLng) {
@@ -45,7 +46,6 @@ public class ConnectionManager {
         if (isOnline()) {
             mWeatherApi.requestWeatherData(latLng);
         } else {
-            Retrier.stop();
             mListener.onRequestError(new ConnectException("No connection!"));
         }
     }
@@ -58,6 +58,7 @@ public class ConnectionManager {
         mListener = listener;
     }
 
+    /*
     private static class Retrier {
         static final int MAX_TRY = 3;
         static int tryCount = 0;
@@ -69,7 +70,7 @@ public class ConnectionManager {
                 return true;
             }
 
-            if ((mLatLng == null || !mLatLng.equals(latLng))) {
+            if (!mLatLng.equals(latLng)) {
                 tryCount = 0;
             }
 
@@ -86,4 +87,5 @@ public class ConnectionManager {
             tryCount = MAX_TRY + 1;
         }
     }
+    */
 }

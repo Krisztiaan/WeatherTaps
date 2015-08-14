@@ -19,4 +19,6 @@
     <string name="percent" translatable="false">%</string>
     <string name="hpa" translatable="false">" hPa"</string>
     <string name="no_data">NaN</string>
+    <string name="tap_for_more">tap for more&#8230;</string>
+    <string name="no_connection">No connection&#8230;</string>
 </resources>

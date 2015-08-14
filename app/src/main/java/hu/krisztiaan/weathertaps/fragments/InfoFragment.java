@@ -1,5 +1,6 @@
 package hu.krisztiaan.weathertaps.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,6 @@ import hu.krisztiaan.weathertaps.R;
 import hu.krisztiaan.weathertaps.data.Weather;
 
 public class InfoFragment extends Fragment {
-    public static final int INFO_REPLACE = 2;
     public static final int INFO_REVEAL = 1;
     public static final int INFO_HIDE = 0;
     private static final String TAG = InfoFragment.class.getSimpleName();
@@ -42,37 +42,30 @@ public class InfoFragment extends Fragment {
     @Bind(R.id.txt_pressure)
     TextView txtPressure;
 
-    @Bind(R.id.info_card_content_layout)
+    @Bind(R.id.info_card_basic)
     RelativeLayout rvContent;
     @Bind(R.id.progress_wheel)
     ProgressWheel pvProgress;
-    @Bind(R.id.rv_in_card)
-    RelativeLayout rvContainer;
-    @Bind(R.id.lv_details)
+    @Bind(R.id.info_card_details)
     LinearLayout lvDetails;
     @Bind(R.id.txt_more)
     TextView txtMore;
 
     private AutoHideListener hideListener;
     private Weather mWeather;
+    private boolean isDetailsDisplayed = false;
 
     public InfoFragment() {
     }
 
-    private static float round(float d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.floatValue();
+    public static String getFragmentTag() {
+        return TAG;
     }
 
-    private String subInvalidData(float input) {
-        if (input == -1) return getActivity().getString(R.string.no_data);
-        else return Float.toString(round(input, 1));
-    }
-
-    @OnClick(R.id.info_card_view)
+    @OnClick(R.id.info_card_container)
     public void onCardClick() {
-        if (lvDetails.getParent() == null) {
+        if (rvContent.getVisibility() == View.GONE) return;
+        if (lvDetails.getVisibility() == View.GONE) {
             showDetails(true);
         } else {
             showDetails(false);
@@ -80,17 +73,18 @@ public class InfoFragment extends Fragment {
     }
 
     private void showDetails(boolean show) {
-        if (show && lvDetails.getParent() == null) {
+        if (show && lvDetails.getVisibility() == View.GONE) {
             if (hideListener != null)
-                hideListener.postponeAutoHide();
-            rvContainer.addView(lvDetails);
+                hideListener.stopAutoHide();
             txtMore.setVisibility(View.GONE);
-
-        } else {
+            lvDetails.setVisibility(View.VISIBLE);
+            isDetailsDisplayed = true;
+        } else if (!show && lvDetails.getVisibility() == View.VISIBLE) {
             if (hideListener != null)
-                hideListener.resumeAutoHide();
-            rvContainer.removeView(lvDetails);
+                hideListener.startAutoHide();
+            lvDetails.setVisibility(View.GONE);
             txtMore.setVisibility(View.VISIBLE);
+            isDetailsDisplayed = false;
         }
     }
 
@@ -99,33 +93,76 @@ public class InfoFragment extends Fragment {
         updateInfoView(INFO_REVEAL);
     }
 
-    public void prepareHide() {
+    public synchronized void updateInfoView(final int direction) {
+        switch (direction) {
+            case INFO_HIDE:
+                if (hideListener != null)
+                    hideListener.stopAutoHide();
+                showDetails(false);
+                rvContent.setVisibility(View.GONE);
+                pvProgress.setVisibility(View.VISIBLE);
+                break;
+            case INFO_REVEAL:
+                if (hideListener != null)
+                    hideListener.startAutoHide();
+                setUpData();
+                pvProgress.setVisibility(View.GONE);
+                rvContent.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void setUpData() {
+        if (mWeather == null) throw new NullPointerException("no data was preloaded");
+        Log.i(TAG, "setUpData for city: " + mWeather.location.getCity());
+        Picasso.with(getActivity()).load(mWeather.currentCondition.getIconUrl()).into(imgWeatherIcon);
+        txtCity.setText(mWeather.location.getCity());
+        txtTemperature.setText(subInvalidData(mWeather.temperature.getTemp())
+                + getString(R.string.deg_celsius));
+        txtWind.setText(getString(R.string.wind)
+                + subInvalidData(mWeather.wind.getSpeed())
+                + getString(R.string.kmph));
+        txtHumidity.setText(getString(R.string.humidity)
+                + subInvalidData(mWeather.currentCondition.getHumidity())
+                + getString(R.string.percent));
+        txtPressure.setText(getString(R.string.pressure)
+                + subInvalidData(mWeather.currentCondition.getPressure())
+                + getString(R.string.hpa));
+    }
+
+    private String subInvalidData(float input) {
+        if (input == -1) return getString(R.string.no_data);
+        else return Float.toString(round(input, 1));
+    }
+
+    private static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
+    }
+
+    public void notifyPrepareHide() {
         mWeather = null;
-        updateInfoView(INFO_HIDE);
     }
 
     public void notifyLoad() {
         updateInfoView(INFO_HIDE);
     }
 
-    public void updateInfoView(final int direction) {
-        rvContainer.removeAllViews();
-        switch (direction) {
-            case INFO_HIDE:
-                showDetails(false);
-                rvContainer.addView(pvProgress, 0);
-                break;
-            case INFO_REVEAL:
-                setUpData();
-                rvContainer.addView(rvContent, 0);
-                break;
-            case INFO_REPLACE:
-                updateInfoView(INFO_HIDE);
-                updateInfoView(INFO_REVEAL);
-                break;
-            default:
-                throw new IllegalArgumentException("direction must be INFO_HIDE, INFO_REVEAL, or INFO_REPLACE");
-        }
+    public Weather getWeather() {
+        return mWeather;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        hideListener = (AutoHideListener) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
@@ -139,11 +176,9 @@ public class InfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() instanceof AutoHideListener)
-            hideListener = (AutoHideListener) getActivity();
         if (mWeather != null) {
             updateInfoView(INFO_REVEAL);
-            setUpData();
+            showDetails(isDetailsDisplayed);
         } else {
             updateInfoView(INFO_HIDE);
         }
@@ -155,23 +190,5 @@ public class InfoFragment extends Fragment {
         if (mWeather == null) {
             updateInfoView(INFO_HIDE);
         }
-    }
-
-    private void setUpData() {
-        if (mWeather == null) throw new NullPointerException("no data was preloaded");
-        Log.i(TAG, "setUpData for city: " + mWeather.location.getCity());
-        Picasso.with(getActivity()).load(mWeather.currentCondition.getIconUrl()).into(imgWeatherIcon);
-        txtCity.setText(mWeather.location.getCity());
-        txtTemperature.setText(subInvalidData(mWeather.temperature.getTemp())
-                + getActivity().getString(R.string.deg_celsius));
-        txtWind.setText(getActivity().getString(R.string.wind)
-                + subInvalidData(mWeather.wind.getSpeed())
-                + getActivity().getString(R.string.kmph));
-        txtHumidity.setText(getActivity().getString(R.string.humidity)
-                + subInvalidData(mWeather.currentCondition.getHumidity())
-                + getActivity().getString(R.string.percent));
-        txtPressure.setText(getActivity().getString(R.string.pressure)
-                + subInvalidData(mWeather.currentCondition.getPressure())
-                + getActivity().getString(R.string.hpa));
     }
 }

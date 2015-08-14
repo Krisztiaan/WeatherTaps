@@ -6,22 +6,18 @@
     xmlns:wheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:clickable="true"
+    android:layout_margin="6dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="6dp"
-    tools:context="hu.krisztiaan.weathertaps.fragments.InfoFragment"
-    android:visibility="visible"
-    >
+    tools:context="hu.krisztiaan.weathertaps.fragments.InfoFragment">
 
     <RelativeLayout
-        android:id="@+id/rv_in_card"
+        android:id="@+id/info_card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true">
-
 
 
         <com.pnikosis.materialishprogress.ProgressWheel
@@ -29,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:layout_centerInParent="true"
+            android:padding="24dp"
             wheel:matProg_barColor="#5588FF"
             wheel:matProg_circleRadius="90dp"
-            wheel:matProg_progressIndeterminate="true"
-            android:padding="24dp"/>
+            wheel:matProg_progressIndeterminate="true"/>
 
         <RelativeLayout
-            android:id="@+id/info_card_content_layout"
-            android:layout_width="wrap_content"
+            android:id="@+id/info_card_basic"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp">
 
@@ -51,75 +47,69 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_toRightOf="@+id/img_weather_icon"
-                android:text="&lt;city_name>"
+                android:maxLines="2"
                 android:textColor="@color/md_grey_700"
-                android:textSize="30sp"
-                android:maxLines="2"/>
+                android:textSize="30sp"/>
 
             <ImageView
                 android:id="@+id/img_weather_icon"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:scaleType="fitCenter"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitCenter"/>
 
             <TextView
                 android:id="@+id/txt_temperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="°C"
-                android:textColor="@color/md_grey_700"
-                android:textSize="50sp"
                 android:layout_below="@+id/txt_city_name"
                 android:layout_centerHorizontal="true"
-                android:paddingTop="12dp"/>
+                android:paddingTop="12dp"
+                android:textColor="@color/md_grey_700"
+                android:textSize="50sp"/>
 
             <TextView
+                android:id="@+id/txt_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="tap for more..."
-                android:id="@+id/txt_more"
-                android:textColor="@color/md_grey_400"
-                android:textSize="20dp"
-                android:layout_below="@+id/txt_temperature"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_below="@+id/txt_temperature"
+                android:text="@string/tap_for_more"
+                android:textColor="@color/md_grey_400"
+                android:textSize="20sp"/>
 
         </RelativeLayout>
+
         <LinearLayout
+            android:id="@+id/info_card_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/info_card_content_layout"
+            android:layout_below="@id/info_card_basic"
             android:orientation="vertical"
-            android:id="@+id/lv_details"
+            android:paddingBottom="12dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:paddingBottom="12dp">
+            android:visibility="gone">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Wind: 0 km/h"
                 android:id="@+id/txt_wind"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/secondaryInfoText"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Humidity: 0"
                 android:id="@+id/txt_humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/secondaryInfoText"/>
 
             <TextView
+                android:id="@+id/txt_pressure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pressure: 0"
-                android:id="@+id/txt_pressure"
                 android:textAppearance="@style/secondaryInfoText"/>
         </LinearLayout>
     </RelativeLayout>

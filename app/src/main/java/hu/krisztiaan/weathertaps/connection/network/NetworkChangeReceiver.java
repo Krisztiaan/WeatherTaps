@@ -1,4 +1,4 @@
-package hu.krisztiaan.weathertaps.connection;
+package hu.krisztiaan.weathertaps.connection.network;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

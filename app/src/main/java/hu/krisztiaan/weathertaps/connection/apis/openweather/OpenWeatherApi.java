@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 import java.net.ConnectException;
 
-import hu.krisztiaan.weathertaps.connection.WeatherApi;
+import hu.krisztiaan.weathertaps.connection.apis.WeatherApi;
 import hu.krisztiaan.weathertaps.data.Weather;
 
 public class OpenWeatherApi extends WeatherApi {
