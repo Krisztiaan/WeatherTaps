@@ -68,9 +68,6 @@ public class MapsActivity extends Activity implements GoogleMap.OnMapClickListen
         registerReceiver(mNetworkChangeReceiver,
                 new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
         setUpMapIfNeeded();
-        if (mInfoFragment.isAdded()) {
-            mSingleMarker = mMap.addMarker(new MarkerOptions().position(mInfoFragment.getWeather().latLng));
-        }
     }
 
     @Override
